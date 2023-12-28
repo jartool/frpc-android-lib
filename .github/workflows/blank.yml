@@ -1,7 +1,5 @@
 name: Frpc Android Lib Build
-on:
-  watch:
-    types: started
+on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-22.04
