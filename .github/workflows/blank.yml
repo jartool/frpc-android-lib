@@ -4,21 +4,28 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: 17
+          java-version: 11
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v2
+      - uses: nttld/setup-ndk@v1
+          id: setup-ndk
+          with:
+            ndk-version: r23c
+            add-to-path: false
+            - run: ./build.sh
+              env:
+                ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: Setup Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.21
+          go-version: 1.19
       - name: Config And Build
         run: |
-          export ANDROID_NDK_HOME=/usr/local/lib/android/sdk/ndk/26.1.10909125
           go install golang.org/x/mobile/cmd/gomobile@latest
           git clone https://github.com/fatedier/frp $(go env GOPATH)/src/github.com/fatedier/frp
           cd $(go env GOPATH)/src/github.com/fatedier/frp
